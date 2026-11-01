@@ -112,7 +112,7 @@ export default function HomePage() {
                 </span>
                 <input 
                   type="email" 
-                  defaultValue="bynandrian@gmail.com"
+                  placeholder="nom@exemple.com"
                   className="w-full bg-slate-950/90 border border-slate-800 rounded-2xl pl-10 pr-4 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/60 transition-all"
                 />
               </div>
@@ -135,7 +135,7 @@ export default function HomePage() {
                 </span>
                 <input 
                   type={showPassword ? 'text' : 'password'} 
-                  defaultValue="••••••••"
+                  placeholder="••••••••"
                   className="w-full bg-slate-950/90 border border-slate-800 rounded-2xl pl-10 pr-10 py-3 text-xs text-white focus:outline-none focus:border-amber-500/60 transition-all"
                 />
                 
