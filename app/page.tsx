@@ -6,6 +6,11 @@ import Link from 'next/link';
 export default function HomePage() {
   const [showPassword, setShowPassword] = useState(false);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+  
+  // Form states (azo ampifandraisina amin'i Supabase amin'ny manaraka)
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   return (
     <main className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col justify-between selection:bg-amber-500 selection:text-black">
@@ -72,7 +77,7 @@ export default function HomePage() {
         {/* GLASS CARD FORM */}
         <div className="w-full max-w-md bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] text-left">
           
-          {/* TABS */}
+          {/* TABS (Connexion / S'inscrire) */}
           <div className="grid grid-cols-2 gap-1 bg-slate-950/80 p-1 rounded-2xl border border-slate-800/80 mb-6 text-center">
             <button 
               type="button"
@@ -94,12 +99,37 @@ export default function HomePage() {
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              S'Inscrire
+              S'inscrire
             </button>
           </div>
 
           {/* FORM INPUTS */}
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            
+            {/* NOM (Raha misafidy S'inscrire ihany no mivoaka) */}
+            {activeTab === 'register' && (
+              <div>
+                <label className="block text-[11px] font-medium text-slate-300 mb-1.5 ml-1">
+                  Nom complet
+                </label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </span>
+                  <input 
+                    type="text" 
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Anaranao sy Fanampiny"
+                    className="w-full bg-slate-950/90 border border-slate-800 rounded-2xl pl-10 pr-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/60 transition-all"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* EMAIL */}
             <div>
               <label className="block text-[11px] font-medium text-slate-300 mb-1.5 ml-1">
                 Adresse e-mail
@@ -112,20 +142,25 @@ export default function HomePage() {
                 </span>
                 <input 
                   type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="nom@exemple.com"
-                  className="w-full bg-slate-950/90 border border-slate-800 rounded-2xl pl-10 pr-4 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/60 transition-all"
+                  className="w-full bg-slate-950/90 border border-slate-800 rounded-2xl pl-10 pr-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/60 transition-all"
                 />
               </div>
             </div>
 
+            {/* PASSWORD */}
             <div>
               <div className="flex items-center justify-between mb-1.5 ml-1 mr-1">
                 <label className="text-[11px] font-medium text-slate-300">
                   Mot de passe
                 </label>
-                <a href="#" className="text-[10px] text-amber-400 hover:underline font-medium">
-                  Oublié ?
-                </a>
+                {activeTab === 'login' && (
+                  <a href="#" className="text-[10px] text-amber-400 hover:underline font-medium">
+                    Oublié ?
+                  </a>
+                )}
               </div>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500">
@@ -135,8 +170,10 @@ export default function HomePage() {
                 </span>
                 <input 
                   type={showPassword ? 'text' : 'password'} 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-slate-950/90 border border-slate-800 rounded-2xl pl-10 pr-10 py-3 text-xs text-white focus:outline-none focus:border-amber-500/60 transition-all"
+                  className="w-full bg-slate-950/90 border border-slate-800 rounded-2xl pl-10 pr-10 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/60 transition-all"
                 />
                 
                 {/* TOGGLE PASSWORD VISIBILITY BUTTON */}
@@ -159,13 +196,14 @@ export default function HomePage() {
               </div>
             </div>
 
+            {/* SUBMIT BUTTON */}
             <div className="pt-2">
               <Link href="/dashboard">
                 <button 
                   type="button" 
                   className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold py-3.5 rounded-2xl transition-all text-xs shadow-[0_4px_20px_rgba(245,158,11,0.3)] flex items-center justify-center gap-2 active:scale-[0.98]"
                 >
-                  Se connecter →
+                  {activeTab === 'login' ? 'Se connecter →' : "S'inscrire et commencer →"}
                 </button>
               </Link>
             </div>
@@ -187,4 +225,4 @@ export default function HomePage() {
 
     </main>
   );
-        }
+                                               }
