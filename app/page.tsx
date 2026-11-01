@@ -1,14 +1,23 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 
 export default function HomePage() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+
   return (
-    <main className="min-h-screen bg-[#06080d] text-slate-100 flex flex-col justify-between selection:bg-amber-500 selection:text-black">
+    <main className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col justify-between selection:bg-amber-500 selection:text-black">
       
       {/* NAVBAR */}
-      <header className="w-full max-w-5xl mx-auto px-6 py-5 flex items-center justify-between border-b border-slate-800/60 backdrop-blur-md">
+      <header className="w-full max-w-5xl mx-auto px-6 py-5 flex items-center justify-between border-b border-slate-800/40 backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center font-black text-black text-xl shadow-[0_0_20px_rgba(245,158,11,0.4)]">
-            🌐
+          {/* TOP LEFT GOLD LOGO */}
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-black font-bold shadow-[0_0_20px_rgba(245,158,11,0.4)]">
+            <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h1.5a2.5 2.5 0 002.5-2.5V11a2 2 0 012-2h1.055M11 20.055V18a2 2 0 00-2-2h-1a2 2 0 01-2-2v-1a2 2 0 00-2-2H3.055" />
+            </svg>
           </div>
           <div>
             <h1 className="text-lg font-bold text-white tracking-wide leading-tight">
@@ -30,13 +39,15 @@ export default function HomePage() {
       </header>
 
       {/* HERO SECTION */}
-      <section className="flex-1 flex flex-col items-center justify-center px-4 py-10 text-center max-w-3xl mx-auto">
+      <section className="flex-1 flex flex-col items-center justify-center px-4 py-8 text-center max-w-3xl mx-auto">
         
-        {/* LOGO GLOWING GLOBE */}
+        {/* CENTER GOLD GLOBE ICON */}
         <div className="relative mb-6">
-          <div className="absolute -inset-1 bg-amber-500/30 rounded-3xl blur-xl"></div>
-          <div className="relative w-20 h-20 bg-gradient-to-b from-slate-900 to-slate-950 border border-amber-500/40 rounded-3xl flex items-center justify-center text-4xl shadow-2xl backdrop-blur-xl">
-            🌍
+          <div className="absolute -inset-2 bg-amber-500/20 rounded-3xl blur-2xl"></div>
+          <div className="relative w-20 h-20 bg-slate-900/90 border border-amber-500/30 rounded-3xl flex items-center justify-center shadow-2xl backdrop-blur-xl">
+            <svg className="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+            </svg>
           </div>
         </div>
 
@@ -59,15 +70,31 @@ export default function HomePage() {
         </p>
 
         {/* GLASS CARD FORM */}
-        <div className="w-full max-w-md bg-slate-900/50 border border-slate-800/80 rounded-3xl p-6 md:p-7 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] text-left">
+        <div className="w-full max-w-md bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] text-left">
           
           {/* TABS */}
           <div className="grid grid-cols-2 gap-1 bg-slate-950/80 p-1 rounded-2xl border border-slate-800/80 mb-6 text-center">
-            <button className="py-2 text-xs font-semibold rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 shadow-sm">
+            <button 
+              type="button"
+              onClick={() => setActiveTab('login')}
+              className={`py-2 text-xs font-semibold rounded-xl transition-all ${
+                activeTab === 'login' 
+                  ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30 shadow-sm' 
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
               Connexion
             </button>
-            <button className="py-2 text-xs font-semibold rounded-xl text-slate-400 hover:text-white transition-all">
-              S'inscrire
+            <button 
+              type="button"
+              onClick={() => setActiveTab('register')}
+              className={`py-2 text-xs font-semibold rounded-xl transition-all ${
+                activeTab === 'register' 
+                  ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30 shadow-sm' 
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              S'Inscrire
             </button>
           </div>
 
@@ -78,8 +105,10 @@ export default function HomePage() {
                 Adresse e-mail
               </label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-sm">
-                  ✉️
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
                 </span>
                 <input 
                   type="email" 
@@ -99,17 +128,36 @@ export default function HomePage() {
                 </a>
               </div>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-sm">
-                  🔒
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
                 </span>
                 <input 
-                  type="password" 
+                  type={showPassword ? 'text' : 'password'} 
                   defaultValue="••••••••"
                   className="w-full bg-slate-950/90 border border-slate-800 rounded-2xl pl-10 pr-10 py-3 text-xs text-white focus:outline-none focus:border-amber-500/60 transition-all"
                 />
-                <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 text-sm cursor-pointer">
-                  👁️
-                </span>
+                
+                {/* TOGGLE PASSWORD VISIBILITY BUTTON */}
+                <button 
+                  type="button" 
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-500 hover:text-slate-300 focus:outline-none"
+                >
+                  {showPassword ? (
+                    /* EYE OFF ICON */
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.025 10.025 0 012.122-.138c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21M3 3l18 18" />
+                    </svg>
+                  ) : (
+                    /* EYE ICON */
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  )}
+                </button>
               </div>
             </div>
 
