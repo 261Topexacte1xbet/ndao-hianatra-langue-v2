@@ -11,7 +11,7 @@ export default function OnboardingPage() {
   const [selectedLevel, setSelectedLevel] = useState("Je débute");
   const [selectedPath, setSelectedPath] = useState("bases");
 
-  // Lisitry ny fiteny
+  // Lisitry ny fiteny feno be (mitovy amin'ny Duolingo)
   const languages = [
     { name: "Anglais", flag: "🇬🇧", desc: "Langue internationale" },
     { name: "Français", flag: "🇫🇷", desc: "Langue officielle et culturelle" },
@@ -24,7 +24,7 @@ export default function OnboardingPage() {
     { name: "Chinois", flag: "🇨🇳", desc: "Langue la plus parlée" },
     { name: "Portugais", flag: "🇵🇹", desc: "Brésil et Portugal" },
     { name: "Russe", flag: "🇷🇺", desc: "Culture et littérature" },
-    { name: "Arabe", flag: "🇸🇦", desc: "Riche et historique" }
+    { name: "Arabe", flag: "🇸🇦", desc: "Riche et historique" },
     { name: "Indonésien", flag: "🇮🇩", desc: "Archipel et commerce" },
     { name: "Polonais", flag: "🇵🇱", desc: "Europe de l'Est" },
     { name: "Vietnamien", flag: "🇻🇳", desc: "Asie du Sud-Est" },
@@ -33,9 +33,14 @@ export default function OnboardingPage() {
     { name: "Turc", flag: "🇹🇷", desc: "Entre Orient et Occident" },
     { name: "Hindi", flag: "🇮🇳", desc: "Culture indienne et cinéma" },
     { name: "Néerlandais", flag: "🇳🇱", desc: "Pays-Bas et Europe" },
+    { name: "Pendjabi", flag: "🇮🇳", desc: "Inde et Pakistan" },
+    { name: "Roumain", flag: "🇷🇴", desc: "Europe centrale" },
+    { name: "Ukrainien", flag: "🇺🇦", desc: "Europe de l'Est" },
+    { name: "Ourdou", flag: "🇵🇰", desc: "Asie du Sud" },
+    { name: "Tagalog", flag: "🇵🇭", desc: "Philippines" },
+    { name: "Tamoul", flag: "🇮🇳", desc: "Inde du Sud et Sri Lanka" }
   ];
 
-  // Safidy ambaratonga
   const levelOptions = [
     "Je débute en " + selectedLanguage,
     "Je connais quelques mots de base",
@@ -44,7 +49,7 @@ export default function OnboardingPage() {
     "Je peux parler de façon approfondie"
   ];
 
-  // Fiasana mandefa feo kely (Bip/Pop) avy hatrany vao tsindrina
+  // Fiasana mandefa feo kely (Bip/Pop)
   const playClickSound = () => {
     if (typeof window !== "undefined") {
       try {
@@ -53,7 +58,6 @@ export default function OnboardingPage() {
         const gainNode = audioCtx.createGain();
 
         oscillator.type = "sine";
-        // Frequency malefaka tsara ho an'ny tsindry
         oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
         oscillator.frequency.exponentialRampToValueAtTime(900, audioCtx.currentTime + 0.05);
 
@@ -112,7 +116,7 @@ export default function OnboardingPage() {
       {/* Main Content */}
       <main className="w-full max-w-md my-auto space-y-6 relative z-10">
 
-        {/* STEP 1: Safidio ny fiteny */}
+        {/* STEP 1 */}
         {step === 1 && (
           <div className="space-y-4">
             <div className="text-center space-y-3">
@@ -165,7 +169,7 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 2: Ambaratonga */}
+        {/* STEP 2 */}
         {step === 2 && (
           <div className="space-y-5">
             <div className="flex items-start gap-3 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl">
@@ -204,7 +208,7 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 3: Point de départ */}
+        {/* STEP 3 */}
         {step === 3 && (
           <div className="space-y-5">
             <div className="flex items-start gap-3 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl">
@@ -270,7 +274,7 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 4: Leçon 1 */}
+        {/* STEP 4 */}
         {step === 4 && (
           <div className="space-y-6 text-center my-auto">
             <div className="relative w-28 h-28 mx-auto flex items-center justify-center">
@@ -307,4 +311,4 @@ export default function OnboardingPage() {
 
     </div>
   );
-        }
+    }
