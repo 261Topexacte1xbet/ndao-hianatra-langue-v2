@@ -7,28 +7,35 @@ export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
-  // Data voaangona amin'ny onboarding
   const [selectedLanguage, setSelectedLanguage] = useState("Anglais");
   const [selectedLevel, setSelectedLevel] = useState("Je débute");
   const [selectedPath, setSelectedPath] = useState("bases");
 
-  // 1. Lisitry ny fiteny maro be (Step 1)
+  // Lisitry ny fiteny
   const languages = [
-    { name: "Anglais", flag: "🇬🇧", desc: "Langue internationale", code: "en-US" },
-    { name: "Français", flag: "🇫🇷", desc: "Langue officielle et culturelle", code: "fr-FR" },
-    { name: "Espagnol", flag: "🇪🇸", desc: "Populaire et dynamique", code: "es-ES" },
-    { name: "Malagasy", flag: "🇲🇬", desc: "Fitenin-drazana sy teny Malagasy", code: "mg-MG" },
-    { name: "Japonais", flag: "🇯🇵", desc: "Culture Anime et technologie", code: "ja-JP" },
-    { name: "Coréen", flag: "🇰🇷", desc: "K-Pop et culture moderne", code: "ko-KR" },
-    { name: "Allemand", flag: "🇩🇪", desc: "Technique et professionnel", code: "de-DE" },
-    { name: "Italien", flag: "🇮🇹", desc: "Mélodique et gastronomie", code: "it-IT" },
-    { name: "Chinois", flag: "🇨🇳", desc: "Langue la plus parlée", code: "zh-CN" },
-    { name: "Portugais", flag: "🇵🇹", desc: "Brésil et Portugal", code: "pt-PT" },
-    { name: "Russe", flag: "🇷🇺", desc: "Culture et littérature", code: "ru-RU" },
-    { name: "Arabe", flag: "🇸🇦", desc: "Riche et historique", code: "ar-SA" }
+    { name: "Anglais", flag: "🇬🇧", desc: "Langue internationale" },
+    { name: "Français", flag: "🇫🇷", desc: "Langue officielle et culturelle" },
+    { name: "Espagnol", flag: "🇪🇸", desc: "Populaire et dynamique" },
+    { name: "Malagasy", flag: "🇲🇬", desc: "Fitenin-drazana sy teny Malagasy" },
+    { name: "Japonais", flag: "🇯🇵", desc: "Culture Anime et technologie" },
+    { name: "Coréen", flag: "🇰🇷", desc: "K-Pop et culture moderne" },
+    { name: "Allemand", flag: "🇩🇪", desc: "Technique et professionnel" },
+    { name: "Italien", flag: "🇮🇹", desc: "Mélodique et gastronomie" },
+    { name: "Chinois", flag: "🇨🇳", desc: "Langue la plus parlée" },
+    { name: "Portugais", flag: "🇵🇹", desc: "Brésil et Portugal" },
+    { name: "Russe", flag: "🇷🇺", desc: "Culture et littérature" },
+    { name: "Arabe", flag: "🇸🇦", desc: "Riche et historique" }
+    { name: "Indonésien", flag: "🇮🇩", desc: "Archipel et commerce" },
+    { name: "Polonais", flag: "🇵🇱", desc: "Europe de l'Est" },
+    { name: "Vietnamien", flag: "🇻🇳", desc: "Asie du Sud-Est" },
+    { name: "Grec", flag: "🇬🇷", desc: "Histoire et philosophie" },
+    { name: "Suédois", flag: "🇸🇪", desc: "Scandinavie et design" },
+    { name: "Turc", flag: "🇹🇷", desc: "Entre Orient et Occident" },
+    { name: "Hindi", flag: "🇮🇳", desc: "Culture indienne et cinéma" },
+    { name: "Néerlandais", flag: "🇳🇱", desc: "Pays-Bas et Europe" },
   ];
 
-  // 2. Safidy ambaratonga (Step 2)
+  // Safidy ambaratonga
   const levelOptions = [
     "Je débute en " + selectedLanguage,
     "Je connais quelques mots de base",
@@ -37,20 +44,36 @@ export default function OnboardingPage() {
     "Je peux parler de façon approfondie"
   ];
 
-  // Mandefa ny feo Text-to-Speech
-  const playVoice = (text: string, langCode: string) => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = langCode;
-      utterance.rate = 0.9;
-      window.speechSynthesis.speak(utterance);
+  // Fiasana mandefa feo kely (Bip/Pop) avy hatrany vao tsindrina
+  const playClickSound = () => {
+    if (typeof window !== "undefined") {
+      try {
+        const audioCtx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        oscillator.type = "sine";
+        // Frequency malefaka tsara ho an'ny tsindry
+        oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(900, audioCtx.currentTime + 0.05);
+
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.05);
+      } catch (e) {
+        console.log("Audio not supported", e);
+      }
     }
   };
 
-  const handleSelectLanguage = (langName: string, langCode: string) => {
-    setSelectedLanguage(langName);
-    playVoice(langName, langCode);
+  const handleSelect = (action: () => void) => {
+    playClickSound();
+    action();
   };
 
   return (
@@ -60,11 +83,11 @@ export default function OnboardingPage() {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
       <div className="absolute bottom-10 right-10 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      {/* Header miaraka amin'ny Bouton Retour sy Progress Bar */}
+      {/* Header */}
       <header className="w-full max-w-md flex items-center justify-between py-4 relative z-10 gap-3">
         {step > 1 ? (
           <button 
-            onClick={() => setStep((prev) => (prev - 1) as 1 | 2 | 3 | 4)}
+            onClick={() => handleSelect(() => setStep((step - 1) as 1 | 2 | 3 | 4))}
             className="text-slate-400 hover:text-cyan-400 text-lg transition-colors"
           >
             ←
@@ -73,7 +96,7 @@ export default function OnboardingPage() {
           <div className="w-5"></div>
         )}
 
-        {/* Dynamic Progress Bar */}
+        {/* Progress Bar */}
         <div className="flex-1 h-2 bg-slate-900 border border-slate-800 rounded-full overflow-hidden">
           <div 
             className="h-full bg-gradient-to-r from-cyan-400 to-amber-400 transition-all duration-500"
@@ -86,8 +109,8 @@ export default function OnboardingPage() {
         </span>
       </header>
 
-      {/* Main Content Area */}
-      <main className="w-full max-w-md my-auto space-y-6 relative z-10 animate-fadeIn">
+      {/* Main Content */}
+      <main className="w-full max-w-md my-auto space-y-6 relative z-10">
 
         {/* STEP 1: Safidio ny fiteny */}
         {step === 1 && (
@@ -111,7 +134,7 @@ export default function OnboardingPage() {
                 return (
                   <div
                     key={lang.name}
-                    onClick={() => handleSelectLanguage(lang.name, lang.code)}
+                    onClick={() => handleSelect(() => setSelectedLanguage(lang.name))}
                     className={`cursor-pointer p-3.5 rounded-2xl border transition-all flex items-center justify-between backdrop-blur-md ${
                       isSelected
                         ? "bg-gradient-to-r from-cyan-500/20 to-amber-500/20 border-cyan-400 shadow-lg scale-[1.01]"
@@ -122,7 +145,7 @@ export default function OnboardingPage() {
                       <span className="text-2xl p-2 rounded-xl bg-slate-950 border border-slate-800">{lang.flag}</span>
                       <div>
                         <h3 className={`text-xs font-bold ${isSelected ? "text-cyan-300" : "text-slate-200"}`}>
-                          {lang.name} <span className="text-[10px]">🔊</span>
+                          {lang.name}
                         </h3>
                         <p className="text-[10px] text-slate-500">{lang.desc}</p>
                       </div>
@@ -134,7 +157,7 @@ export default function OnboardingPage() {
             </div>
 
             <button
-              onClick={() => setStep(2)}
+              onClick={() => handleSelect(() => setStep(2))}
               className="w-full bg-gradient-to-r from-amber-400 to-cyan-400 hover:from-amber-300 hover:to-cyan-300 text-slate-950 font-black py-4 rounded-2xl text-xs uppercase tracking-widest shadow-xl transition-all"
             >
               CONTINUER →
@@ -142,7 +165,7 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 2: Ambaratonga sy traikefa amin'ilay fiteny */}
+        {/* STEP 2: Ambaratonga */}
         {step === 2 && (
           <div className="space-y-5">
             <div className="flex items-start gap-3 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl">
@@ -158,7 +181,7 @@ export default function OnboardingPage() {
                 return (
                   <div
                     key={idx}
-                    onClick={() => setSelectedLevel(opt)}
+                    onClick={() => handleSelect(() => setSelectedLevel(opt))}
                     className={`cursor-pointer p-4 rounded-2xl border transition-all flex items-center justify-between ${
                       isSelected
                         ? "bg-cyan-500/20 border-cyan-400 text-cyan-300 font-bold"
@@ -173,7 +196,7 @@ export default function OnboardingPage() {
             </div>
 
             <button
-              onClick={() => setStep(3)}
+              onClick={() => handleSelect(() => setStep(3))}
               className="w-full bg-gradient-to-r from-amber-400 to-cyan-400 hover:from-amber-300 hover:to-cyan-300 text-slate-950 font-black py-4 rounded-2xl text-xs uppercase tracking-widest shadow-xl transition-all"
             >
               CONTINUER →
@@ -181,7 +204,7 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 3: Safidy point de départ */}
+        {/* STEP 3: Point de départ */}
         {step === 3 && (
           <div className="space-y-5">
             <div className="flex items-start gap-3 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl">
@@ -192,9 +215,8 @@ export default function OnboardingPage() {
             </div>
 
             <div className="space-y-3">
-              {/* Option 1: Commence par les bases */}
               <div
-                onClick={() => setSelectedPath("bases")}
+                onClick={() => handleSelect(() => setSelectedPath("bases"))}
                 className={`cursor-pointer p-4 rounded-2xl border transition-all relative ${
                   selectedPath === "bases"
                     ? "bg-gradient-to-r from-amber-500/20 to-cyan-500/20 border-amber-400"
@@ -217,9 +239,8 @@ export default function OnboardingPage() {
                 </div>
               </div>
 
-              {/* Option 2: Test de niveau */}
               <div
-                onClick={() => setSelectedPath("test")}
+                onClick={() => handleSelect(() => setSelectedPath("test"))}
                 className={`cursor-pointer p-4 rounded-2xl border transition-all ${
                   selectedPath === "test"
                     ? "bg-gradient-to-r from-amber-500/20 to-cyan-500/20 border-amber-400"
@@ -241,7 +262,7 @@ export default function OnboardingPage() {
             </div>
 
             <button
-              onClick={() => setStep(4)}
+              onClick={() => handleSelect(() => setStep(4))}
               className="w-full bg-gradient-to-r from-amber-400 to-cyan-400 hover:from-amber-300 hover:to-cyan-300 text-slate-950 font-black py-4 rounded-2xl text-xs uppercase tracking-widest shadow-xl transition-all"
             >
               CONTINUER →
@@ -249,7 +270,7 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 4: Hafatra farany sy fampidirana amin'ny Leçon 1 */}
+        {/* STEP 4: Leçon 1 */}
         {step === 4 && (
           <div className="space-y-6 text-center my-auto">
             <div className="relative w-28 h-28 mx-auto flex items-center justify-center">
@@ -269,7 +290,7 @@ export default function OnboardingPage() {
             </div>
 
             <button
-              onClick={() => router.push("/dashboard")}
+              onClick={() => handleSelect(() => router.push("/dashboard"))}
               className="w-full bg-gradient-to-r from-amber-400 via-cyan-400 to-indigo-500 hover:from-amber-300 hover:to-cyan-300 text-slate-950 font-black py-4 rounded-2xl text-xs uppercase tracking-widest shadow-xl shadow-cyan-500/20 transform active:scale-98 transition-all"
             >
               COMMENCER LA LEÇON →
@@ -281,9 +302,9 @@ export default function OnboardingPage() {
 
       {/* Footer */}
       <footer className="py-2 text-[10px] text-slate-600 font-mono relative z-10">
-        Ndao Hianatra Cyber Engine © 2026
+        Ndao Hianatra Sound Engine © 2026
       </footer>
 
     </div>
   );
-      }
+        }
