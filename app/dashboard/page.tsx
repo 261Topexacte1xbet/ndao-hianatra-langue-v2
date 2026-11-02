@@ -39,14 +39,14 @@ export default function DashboardPage() {
       {/* MAIN CONTENT AREA */}
       <main className="p-4 max-w-md mx-auto relative z-10">
         
-        {/* TAB 1: FIANARANA (CARDS MODERNES & ROLEPLAY) */}
+        {/* TAB 1: APPRENTISSAGE (FIANARANA) */}
         {activeTab === "fianarana" && (
           <section className="space-y-6 py-2">
             <div className="text-center space-y-1">
               <span className="text-[11px] font-mono bg-cyan-950 text-cyan-400 px-3 py-1 rounded-full border border-cyan-800">
-                MODULE 1: FANDRAISANA SY RESAKA
+                MODULE 1 : ACCUEIL ET SALUTATIONS
               </span>
-              <h2 className="text-xl font-bold text-slate-100">Ny Mission-nao anio</h2>
+              <h2 className="text-xl font-bold text-slate-100">Votre Mission du jour</h2>
             </div>
 
             {/* Mission Cards Grid */}
@@ -54,20 +54,20 @@ export default function DashboardPage() {
               {/* Mission Card 1 */}
               <div className="bg-gradient-to-b from-slate-900 to-slate-950 border border-amber-500/40 rounded-2xl p-5 shadow-xl shadow-amber-500/5 relative overflow-hidden group hover:border-amber-400 transition-all">
                 <div className="absolute top-0 right-0 bg-amber-500 text-slate-950 font-bold text-[10px] px-3 py-1 rounded-bl-xl uppercase font-mono">
-                  Maimaim-poana
+                  Gratuit
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="text-3xl bg-amber-500/10 p-3 rounded-xl border border-amber-500/30">
                     🎙️
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-bold text-amber-300">1. Roleplay: Fiarahabana</h3>
+                    <h3 className="font-bold text-amber-300">1. Roleplay : Salutations</h3>
                     <p className="text-xs text-slate-400 leading-relaxed">
-                      Miresaha mivantana amin'ny AI Cyber Coach mba hamolaka ny fiteninao.
+                      Pratiquez directement avec le Cyber Coach IA pour maîtriser la prononciation (Fianarana Malagasy).
                     </p>
                     <div className="pt-2 flex items-center gap-3">
                       <button className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-lg shadow-amber-500/20">
-                        Atomboka (5 min)
+                        Commencer (5 min)
                       </button>
                       <span className="text-[11px] text-cyan-400 font-mono">+50 XP</span>
                     </div>
@@ -82,13 +82,13 @@ export default function DashboardPage() {
                     🎧
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-bold text-cyan-300">2. Audio Challenge</h3>
+                    <h3 className="font-bold text-cyan-300">2. Défi Audio</h3>
                     <p className="text-xs text-slate-400 leading-relaxed">
-                      Mihinoa tantara fohy dia valio ny fanontaniana 3 mifanaraka aminy.
+                      Écoutez l'histoire courte et répondez aux 3 questions interactives associées.
                     </p>
                     <div className="pt-2 flex items-center gap-3">
                       <button className="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/40 font-bold text-xs px-4 py-2 rounded-xl transition-all">
-                        Hianatra
+                        Étudier
                       </button>
                       <span className="text-[11px] text-amber-400 font-mono">+100 XP</span>
                     </div>
@@ -99,13 +99,13 @@ export default function DashboardPage() {
           </section>
         )}
 
-        {/* TAB 2: TANJONA */}
+        {/* TAB 2: OBJECTIFS (TANJONA) */}
         {activeTab === "tanjona" && (
           <section className="space-y-4 py-2">
-            <h2 className="text-lg font-bold text-amber-400">Fanamby Isan'andro</h2>
+            <h2 className="text-lg font-bold text-amber-400">Quêtes Quotidiennes</h2>
             <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl space-y-3">
               <div className="flex justify-between text-xs">
-                <span>Mahavita lesona Roleplay 1</span>
+                <span>Terminer 1 leçon Roleplay</span>
                 <span className="text-amber-400 font-bold">1 / 1</span>
               </div>
               <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
@@ -115,10 +115,10 @@ export default function DashboardPage() {
           </section>
         )}
 
-        {/* TAB 3: LAHARANA */}
+        {/* TAB 3: CLASSEMENT (LAHARANA) */}
         {activeTab === "laharana" && (
           <section className="space-y-3 py-2">
-            <h2 className="text-lg font-bold text-cyan-400">Top Cyber Students</h2>
+            <h2 className="text-lg font-bold text-cyan-400">Top Étudiants Cyber</h2>
             <div className="space-y-2">
               {[
                 { rank: 1, name: "Julio Mario", xp: "1250 XP", badge: "🥇" },
@@ -137,14 +137,14 @@ export default function DashboardPage() {
           </section>
         )}
 
-        {/* TAB 4: TSENA & FANDOAVAM-BOLA (BESPOKE MOBILE MONEY) */}
+        {/* TAB 4: BOUTIQUE & PAIEMENT (TSENA) */}
         {activeTab === "tsena" && (
           <section className="space-y-4 py-2">
             <div className="text-center space-y-1">
               <h2 className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-cyan-400">
                 Cyber Pass & Mobile Money
               </h2>
-              <p className="text-xs text-slate-400">Safidio ny fomba fandoavam-bola mety aminao</p>
+              <p className="text-xs text-slate-400">Choisissez votre mode de paiement sécurisé</p>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -157,7 +157,7 @@ export default function DashboardPage() {
               >
                 <div className="text-xs font-bold text-cyan-400 uppercase font-mono">Pass 24h</div>
                 <div className="text-lg font-black text-white my-1">500 Ar</div>
-                <p className="text-[10px] text-slate-400">Access illimité mandritra ny 1 andro</p>
+                <p className="text-[10px] text-slate-400">Accès illimité pendant 24 heures</p>
               </div>
 
               {/* Option 2: Pass VIP Mensuel */}
@@ -169,13 +169,13 @@ export default function DashboardPage() {
               >
                 <div className="text-xs font-bold text-amber-400 uppercase font-mono">VIP Mensuel</div>
                 <div className="text-lg font-black text-white my-1">10 000 Ar</div>
-                <p className="text-[10px] text-slate-400">Group Video + Vocal AI mandritra ny iray vola</p>
+                <p className="text-[10px] text-slate-400">Appels vidéo de groupe + IA illimités</p>
               </div>
             </div>
 
             {/* Mobile Money Buttons */}
             <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl space-y-3">
-              <h3 className="text-xs font-bold text-slate-300">Handoa amin'ny alalan'ny:</h3>
+              <h3 className="text-xs font-bold text-slate-300">Payer via Mobile Money :</h3>
               <div className="grid grid-cols-3 gap-2">
                 <button className="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-bold py-2 rounded-xl text-xs">
                   MVola
@@ -191,7 +191,7 @@ export default function DashboardPage() {
           </section>
         )}
 
-        {/* TAB 5: KAONTY */}
+        {/* TAB 5: COMPTE (KAONTY) */}
         {activeTab === "kaonty" && (
           <section className="space-y-4 py-4 text-center">
             <div className="w-24 h-24 mx-auto rounded-2xl bg-gradient-to-tr from-cyan-500 to-amber-400 p-[2px]">
@@ -200,22 +200,22 @@ export default function DashboardPage() {
               </div>
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-100">Cyber Learner</h2>
-              <p className="text-xs text-cyan-400 font-mono">Level 4 • Explorer</p>
+              <h2 className="text-lg font-bold text-slate-100">Cyber Apprenti</h2>
+              <p className="text-xs text-cyan-400 font-mono">Niveau 4 • Explorateur</p>
             </div>
           </section>
         )}
 
       </main>
 
-      {/* FIXED BOTTOM NAVIGATION BAR (CYBER DESIGN) */}
+      {/* FIXED BOTTOM NAVIGATION BAR */}
       <nav className="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-cyan-500/20 p-3 flex justify-around items-center z-40">
         {[
-          { id: "fianarana", label: "Fianarana", icon: "🚀" },
-          { id: "tanjona", label: "Tanjona", icon: "🎯" },
-          { id: "laharana", label: "Laharana", icon: "🏆" },
-          { id: "tsena", label: "Tsena", icon: "💳" },
-          { id: "kaonty", label: "Kaonty", icon: "👤" },
+          { id: "fianarana", label: "Apprentissage", icon: "🚀" },
+          { id: "tanjona", label: "Objectifs", icon: "🎯" },
+          { id: "laharana", label: "Classement", icon: "🏆" },
+          { id: "tsena", label: "Boutique", icon: "💳" },
+          { id: "kaonty", label: "Compte", icon: "👤" },
         ].map((tab) => (
           <button
             key={tab.id}
