@@ -7,7 +7,6 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirection mivantana mankany amin'ny login raha vao misokatra ny pejy
     router.push("/login");
   }, [router]);
 
