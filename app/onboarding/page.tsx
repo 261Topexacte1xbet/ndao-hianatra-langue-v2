@@ -4,34 +4,40 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function OnboardingPage() {
-  const [selectedLanguage, setSelectedLanguage] = useState("Malagasy");
   const router = useRouter();
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
-  // Lisitry ny fiteny maro be mitovy amin'ny Duolingo
+  // Data voaangona amin'ny onboarding
+  const [selectedLanguage, setSelectedLanguage] = useState("Anglais");
+  const [selectedLevel, setSelectedLevel] = useState("Je débute");
+  const [selectedPath, setSelectedPath] = useState("bases");
+
+  // 1. Lisitry ny fiteny maro be (Step 1)
   const languages = [
-    { name: "Malagasy", flag: "🇲🇬", desc: "Fitenin-drazana sy teny Malagasy", code: "mg-MG" },
     { name: "Anglais", flag: "🇬🇧", desc: "Langue internationale", code: "en-US" },
     { name: "Français", flag: "🇫🇷", desc: "Langue officielle et culturelle", code: "fr-FR" },
     { name: "Espagnol", flag: "🇪🇸", desc: "Populaire et dynamique", code: "es-ES" },
+    { name: "Malagasy", flag: "🇲🇬", desc: "Fitenin-drazana sy teny Malagasy", code: "mg-MG" },
     { name: "Japonais", flag: "🇯🇵", desc: "Culture Anime et technologie", code: "ja-JP" },
     { name: "Coréen", flag: "🇰🇷", desc: "K-Pop et culture moderne", code: "ko-KR" },
     { name: "Allemand", flag: "🇩🇪", desc: "Technique et professionnel", code: "de-DE" },
     { name: "Italien", flag: "🇮🇹", desc: "Mélodique et gastronomie", code: "it-IT" },
-    { name: "Chinois (Mandarin)", flag: "🇨🇳", desc: "Langue la plus parlée", code: "zh-CN" },
-    { name: "Arabe", flag: "🇸🇦", desc: "Riche et historique", code: "ar-SA" },
-    { name: "Russe", flag: "🇷🇺", desc: "Culture et littérature", code: "ru-RU" },
+    { name: "Chinois", flag: "🇨🇳", desc: "Langue la plus parlée", code: "zh-CN" },
     { name: "Portugais", flag: "🇵🇹", desc: "Brésil et Portugal", code: "pt-PT" },
-    { name: "Néerlandais", flag: "🇳🇱", desc: "Pays-Bas et Europe", code: "nl-NL" },
-    { name: "Turc", flag: "🇹🇷", desc: "Entre Orient et Occident", code: "tr-TR" },
-    { name: "Hindi", flag: "🇮🇳", desc: "Culture indienne et cinéma", code: "hi-IN" },
-    { name: "Suédois", flag: "🇸🇪", desc: "Scandinavie et design", code: "sv-SE" },
-    { name: "Grec", flag: "🇬🇷", desc: "Histoire et philosophie", code: "el-GR" },
-    { name: "Polonais", flag: "🇵🇱", desc: "Europe de l'Est", code: "pl-PL" },
-    { name: "Vietnamien", flag: "🇻🇳", desc: "Asie du Sud-Est", code: "vi-VN" },
-    { name: "Indonésien", flag: "🇮🇩", desc: "Archipel et commerce", code: "id-ID" }
+    { name: "Russe", flag: "🇷🇺", desc: "Culture et littérature", code: "ru-RU" },
+    { name: "Arabe", flag: "🇸🇦", desc: "Riche et historique", code: "ar-SA" }
   ];
 
-  // Mandefa ny feo (Text-to-Speech)
+  // 2. Safidy ambaratonga (Step 2)
+  const levelOptions = [
+    "Je débute en " + selectedLanguage,
+    "Je connais quelques mots de base",
+    "Je peux avoir une conversation simple",
+    "Je peux parler de sujets variés",
+    "Je peux parler de façon approfondie"
+  ];
+
+  // Mandefa ny feo Text-to-Speech
   const playVoice = (text: string, langCode: string) => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
@@ -47,10 +53,6 @@ export default function OnboardingPage() {
     playVoice(langName, langCode);
   };
 
-  const handleContinue = () => {
-    router.push("/dashboard");
-  };
-
   return (
     <div className="min-h-screen bg-[#090b10] text-slate-100 font-sans flex flex-col justify-between items-center p-4 relative overflow-hidden">
       
@@ -58,97 +60,230 @@ export default function OnboardingPage() {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
       <div className="absolute bottom-10 right-10 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      {/* Header */}
-      <header className="w-full max-w-md flex justify-between items-center py-4 relative z-10">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
-          <span className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Cyber Academy</span>
+      {/* Header miaraka amin'ny Bouton Retour sy Progress Bar */}
+      <header className="w-full max-w-md flex items-center justify-between py-4 relative z-10 gap-3">
+        {step > 1 ? (
+          <button 
+            onClick={() => setStep((prev) => (prev - 1) as 1 | 2 | 3 | 4)}
+            className="text-slate-400 hover:text-cyan-400 text-lg transition-colors"
+          >
+            ←
+          </button>
+        ) : (
+          <div className="w-5"></div>
+        )}
+
+        {/* Dynamic Progress Bar */}
+        <div className="flex-1 h-2 bg-slate-900 border border-slate-800 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-gradient-to-r from-cyan-400 to-amber-400 transition-all duration-500"
+            style={{ width: `${(step / 4) * 100}%` }}
+          ></div>
         </div>
-        <span className="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full font-mono flex items-center gap-1">
-          🔊 Audio Interactive
+
+        <span className="text-[10px] font-mono text-cyan-400 font-bold">
+          {step}/4
         </span>
       </header>
 
-      {/* Main Content */}
-      <main className="w-full max-w-md my-auto space-y-4 relative z-10">
-        
-        {/* Animated Cyber Mascot Header */}
-        <div className="text-center space-y-3">
-          <div className="relative w-20 h-20 mx-auto flex items-center justify-center">
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-amber-400 opacity-75 blur-md animate-spin-slow"></div>
-            
-            <div className="relative w-full h-full bg-slate-950 border border-cyan-500/40 rounded-3xl flex items-center justify-center text-3xl shadow-2xl shadow-cyan-500/20 transform hover:scale-105 transition-transform duration-300">
-              <span className="animate-bounce">🌐⚡</span>
+      {/* Main Content Area */}
+      <main className="w-full max-w-md my-auto space-y-6 relative z-10 animate-fadeIn">
+
+        {/* STEP 1: Safidio ny fiteny */}
+        {step === 1 && (
+          <div className="space-y-4">
+            <div className="text-center space-y-3">
+              <div className="relative w-20 h-20 mx-auto flex items-center justify-center">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-cyan-500 to-amber-400 opacity-70 blur-md animate-spin-slow"></div>
+                <div className="relative w-full h-full bg-slate-950 border border-cyan-500/40 rounded-3xl flex items-center justify-center text-3xl shadow-2xl">
+                  <span className="animate-bounce">🌐⚡</span>
+                </div>
+              </div>
+              <h1 className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-200 to-amber-400 tracking-wide uppercase">
+                Que veux-tu apprendre ?
+              </h1>
+              <p className="text-xs text-slate-400">Sélectionnez votre langue cible ci-dessous.</p>
             </div>
-          </div>
 
-          <div className="space-y-1">
-            <h1 className="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-200 to-amber-400 tracking-wide uppercase">
-              Misafidiana Fiteny Hianarana
-            </h1>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Tsindrio ny fiteny tianao mba handrenesana ny feo fanononana sy hanombohana!
-            </p>
-          </div>
-        </div>
+            <div className="space-y-2 max-h-[340px] overflow-y-auto pr-1 scrollbar-thin">
+              {languages.map((lang) => {
+                const isSelected = selectedLanguage === lang.name;
+                return (
+                  <div
+                    key={lang.name}
+                    onClick={() => handleSelectLanguage(lang.name, lang.code)}
+                    className={`cursor-pointer p-3.5 rounded-2xl border transition-all flex items-center justify-between backdrop-blur-md ${
+                      isSelected
+                        ? "bg-gradient-to-r from-cyan-500/20 to-amber-500/20 border-cyan-400 shadow-lg scale-[1.01]"
+                        : "bg-slate-900/80 border-slate-800 hover:border-slate-700"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl p-2 rounded-xl bg-slate-950 border border-slate-800">{lang.flag}</span>
+                      <div>
+                        <h3 className={`text-xs font-bold ${isSelected ? "text-cyan-300" : "text-slate-200"}`}>
+                          {lang.name} <span className="text-[10px]">🔊</span>
+                        </h3>
+                        <p className="text-[10px] text-slate-500">{lang.desc}</p>
+                      </div>
+                    </div>
+                    {isSelected && <span className="text-cyan-400 text-xs font-mono font-bold">✓</span>}
+                  </div>
+                );
+              })}
+            </div>
 
-        {/* Scrollable Language List */}
-        <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-cyan-500/30">
-          {languages.map((lang) => {
-            const isSelected = selectedLanguage === lang.name;
-            return (
+            <button
+              onClick={() => setStep(2)}
+              className="w-full bg-gradient-to-r from-amber-400 to-cyan-400 hover:from-amber-300 hover:to-cyan-300 text-slate-950 font-black py-4 rounded-2xl text-xs uppercase tracking-widest shadow-xl transition-all"
+            >
+              CONTINUER →
+            </button>
+          </div>
+        )}
+
+        {/* STEP 2: Ambaratonga sy traikefa amin'ilay fiteny */}
+        {step === 2 && (
+          <div className="space-y-5">
+            <div className="flex items-start gap-3 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl">
+              <div className="text-3xl animate-bounce">🤖</div>
+              <div className="bg-slate-950 border border-cyan-500/30 p-3 rounded-2xl relative text-xs text-slate-200 leading-relaxed">
+                Tu as déjà des bases en <span className="text-amber-400 font-bold">{selectedLanguage}</span> ?
+              </div>
+            </div>
+
+            <div className="space-y-2.5">
+              {levelOptions.map((opt, idx) => {
+                const isSelected = selectedLevel === opt;
+                return (
+                  <div
+                    key={idx}
+                    onClick={() => setSelectedLevel(opt)}
+                    className={`cursor-pointer p-4 rounded-2xl border transition-all flex items-center justify-between ${
+                      isSelected
+                        ? "bg-cyan-500/20 border-cyan-400 text-cyan-300 font-bold"
+                        : "bg-slate-900/80 border-slate-800 text-slate-300 hover:border-slate-700"
+                    }`}
+                  >
+                    <span className="text-xs">{opt}</span>
+                    <span className="text-xs text-slate-500">📊</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <button
+              onClick={() => setStep(3)}
+              className="w-full bg-gradient-to-r from-amber-400 to-cyan-400 hover:from-amber-300 hover:to-cyan-300 text-slate-950 font-black py-4 rounded-2xl text-xs uppercase tracking-widest shadow-xl transition-all"
+            >
+              CONTINUER →
+            </button>
+          </div>
+        )}
+
+        {/* STEP 3: Safidy point de départ */}
+        {step === 3 && (
+          <div className="space-y-5">
+            <div className="flex items-start gap-3 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl">
+              <div className="text-3xl animate-bounce">🤖</div>
+              <div className="bg-slate-950 border border-cyan-500/30 p-3 rounded-2xl text-xs text-slate-200 leading-relaxed">
+                Maintenant, on va trouver le meilleur point de départ !
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {/* Option 1: Commence par les bases */}
               <div
-                key={lang.name}
-                onClick={() => handleSelectLanguage(lang.name, lang.code)}
-                className={`group cursor-pointer p-3 rounded-2xl border transition-all duration-300 flex items-center justify-between backdrop-blur-md ${
-                  isSelected
-                    ? "bg-gradient-to-r from-cyan-500/20 to-amber-500/20 border-cyan-400/80 shadow-lg shadow-cyan-500/10 scale-[1.01]"
-                    : "bg-slate-900/80 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900"
+                onClick={() => setSelectedPath("bases")}
+                className={`cursor-pointer p-4 rounded-2xl border transition-all relative ${
+                  selectedPath === "bases"
+                    ? "bg-gradient-to-r from-amber-500/20 to-cyan-500/20 border-amber-400"
+                    : "bg-slate-900/80 border-slate-800"
+                }`}
+              >
+                <span className="absolute -top-2.5 right-4 bg-cyan-500 text-slate-950 text-[9px] font-black uppercase px-2.5 py-0.5 rounded-full">
+                  RECOMMANDÉ
+                </span>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold text-lg">
+                    📘
+                  </div>
+                  <div>
+                    <h3 className="text-xs font-bold text-amber-300">
+                      Tu débutes en {selectedLanguage} ?
+                    </h3>
+                    <p className="text-[10px] text-slate-400">Commence par les bases !</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Option 2: Test de niveau */}
+              <div
+                onClick={() => setSelectedPath("test")}
+                className={`cursor-pointer p-4 rounded-2xl border transition-all ${
+                  selectedPath === "test"
+                    ? "bg-gradient-to-r from-amber-500/20 to-cyan-500/20 border-amber-400"
+                    : "bg-slate-900/80 border-slate-800"
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl p-2 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
-                    {lang.flag}
-                  </span>
+                  <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-lg">
+                    🧭
+                  </div>
                   <div>
-                    <h3 className={`text-xs font-bold transition-colors ${isSelected ? "text-cyan-300" : "text-slate-200"}`}>
-                      {lang.name} 🔊
+                    <h3 className="text-xs font-bold text-cyan-300">
+                      Tu parles déjà un peu {selectedLanguage} ?
                     </h3>
-                    <p className="text-[10px] text-slate-500 font-medium">
-                      {lang.desc}
-                    </p>
+                    <p className="text-[10px] text-slate-400">On va trouver par où tu dois commencer !</p>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <span className={`text-[10px] font-mono px-2.5 py-1 rounded-full border transition-all ${
-                    isSelected
-                      ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/40 shadow-sm"
-                      : "bg-slate-950 text-slate-500 border-slate-800 group-hover:text-slate-400"
-                  }`}>
-                    {isSelected ? "Voafidy ✓" : "Tsindrio →"}
-                  </span>
-                </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
 
-        {/* Continue Button */}
-        <button
-          onClick={handleContinue}
-          className="w-full bg-gradient-to-r from-amber-400 via-cyan-400 to-indigo-500 hover:from-amber-300 hover:to-cyan-300 text-slate-950 font-black py-3.5 rounded-2xl text-xs uppercase tracking-widest shadow-xl shadow-cyan-500/20 transform active:scale-98 transition-all duration-200"
-        >
-          Tohizana mankany amin'ny Dashboard →
-        </button>
+            <button
+              onClick={() => setStep(4)}
+              className="w-full bg-gradient-to-r from-amber-400 to-cyan-400 hover:from-amber-300 hover:to-cyan-300 text-slate-950 font-black py-4 rounded-2xl text-xs uppercase tracking-widest shadow-xl transition-all"
+            >
+              CONTINUER →
+            </button>
+          </div>
+        )}
+
+        {/* STEP 4: Hafatra farany sy fampidirana amin'ny Leçon 1 */}
+        {step === 4 && (
+          <div className="space-y-6 text-center my-auto">
+            <div className="relative w-28 h-28 mx-auto flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-400 to-amber-400 blur-xl opacity-50 animate-pulse"></div>
+              <div className="relative w-full h-full bg-slate-950 border-2 border-cyan-400 rounded-full flex items-center justify-center text-5xl shadow-2xl">
+                🚀
+              </div>
+            </div>
+
+            <div className="space-y-2 bg-slate-900/90 border border-slate-800 p-5 rounded-3xl backdrop-blur">
+              <h2 className="text-lg font-extrabold text-amber-400">
+                D'accord ! C'est parti pour la Leçon 1 de l'Unité 1.
+              </h2>
+              <p className="text-xs text-slate-400">
+                Votre profil <span className="text-cyan-300 font-semibold">{selectedLanguage}</span> est prêt !
+              </p>
+            </div>
+
+            <button
+              onClick={() => router.push("/dashboard")}
+              className="w-full bg-gradient-to-r from-amber-400 via-cyan-400 to-indigo-500 hover:from-amber-300 hover:to-cyan-300 text-slate-950 font-black py-4 rounded-2xl text-xs uppercase tracking-widest shadow-xl shadow-cyan-500/20 transform active:scale-98 transition-all"
+            >
+              COMMENCER LA LEÇON →
+            </button>
+          </div>
+        )}
 
       </main>
 
       {/* Footer */}
       <footer className="py-2 text-[10px] text-slate-600 font-mono relative z-10">
-        Ndao Hianatra Audio Engine © 2026
+        Ndao Hianatra Cyber Engine © 2026
       </footer>
 
     </div>
   );
-    }
+      }
