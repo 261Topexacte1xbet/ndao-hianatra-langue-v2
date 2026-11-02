@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 
-// Client Supabase tsotra
+// Client Supabase
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -32,6 +32,7 @@ export default function LoginPage() {
       if (error) {
         setErrorMsg(error.message);
       } else {
+        // Redirection vers l'onboarding après inscription
         router.push("/onboarding");
       }
     } else {
@@ -43,6 +44,7 @@ export default function LoginPage() {
       if (error) {
         setErrorMsg(error.message);
       } else {
+        // Redirection vers l'onboarding après connexion
         router.push("/onboarding");
       }
     }
@@ -51,6 +53,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col justify-center items-center p-4 relative overflow-hidden">
+      {/* Cyber Glow Background */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="w-full max-w-md bg-slate-900/90 border border-cyan-500/30 p-6 rounded-3xl shadow-2xl backdrop-blur relative z-10 space-y-6">
@@ -124,4 +127,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-  }
+             }
