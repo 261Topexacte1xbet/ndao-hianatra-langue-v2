@@ -1,50 +1,126 @@
+"use client";
+
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
 export default function LoginPage() {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const router = useRouter();
+  const supabase = createClientComponentClient();
+
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMsg(null);
+
+    if (isSignUp) {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        setErrorMsg(error.message);
+      } else {
+        router.push("/onboarding");
+      }
+    } else {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setErrorMsg(error.message);
+      } else {
+        router.push("/onboarding");
+      }
+    }
+    setLoading(false);
+  };
+
   return (
-    <main className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
-        
-        {/* HEADER */}
-        <div className="text-center mb-6">
-          <div className="w-10 h-10 mx-auto rounded-xl bg-amber-500 flex items-center justify-center font-bold text-black mb-3">
-            N
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col justify-center items-center p-4 relative overflow-hidden">
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div className="w-full max-w-md bg-slate-900/90 border border-cyan-500/30 p-6 rounded-3xl shadow-2xl backdrop-blur relative z-10 space-y-6">
+        <div className="text-center space-y-2">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-amber-400 p-[2px] shadow-lg shadow-cyan-500/20">
+            <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-amber-300 text-xl">
+              NH
+            </div>
           </div>
-          <h1 className="text-xl font-bold text-white mb-1">Connexion</h1>
-          <p className="text-xs text-slate-400">Accédez à votre espace Ndao Hianatra Langue</p>
+          <h1 className="text-xl font-extrabold text-amber-400 tracking-wide">
+            NDAO HIANATRA
+          </h1>
+          <p className="text-xs text-slate-400">
+            {isSignUp ? "Créer un nouveau compte Cyber" : "Bienvenue ! Connectez-vous à votre compte"}
+          </p>
         </div>
 
-        {/* FORM */}
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">E-mail</label>
-            <input 
-              type="email" 
-              placeholder="votre@email.com" 
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500"
+        {errorMsg && (
+          <div className="bg-red-500/10 border border-red-500/40 text-red-400 text-xs p-3 rounded-xl text-center">
+            {errorMsg}
+          </div>
+        )}
+
+        <form onSubmit={handleAuth} className="space-y-4">
+          <div className="space-y-1">
+            <label className="text-xs font-mono text-cyan-400">Adresse Email</label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="votre.email@example.com"
+              className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-400 rounded-xl p-3 text-sm text-slate-100 outline-none transition-all"
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Mot de passe</label>
-            <input 
-              type="password" 
-              placeholder="••••••••" 
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500"
+          <div className="space-y-1">
+            <label className="text-xs font-mono text-cyan-400">Mot de passe</label>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-400 rounded-xl p-3 text-sm text-slate-100 outline-none transition-all"
             />
           </div>
 
-          <button className="w-full bg-amber-500 hover:bg-amber-400 text-black font-semibold py-3 rounded-xl transition-all text-sm mt-2">
-            Se connecter
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-amber-500 to-cyan-500 hover:from-amber-400 hover:to-cyan-400 text-slate-950 font-black py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-cyan-500/20 uppercase tracking-wider disabled:opacity-50"
+          >
+            {loading ? "Chargement..." : isSignUp ? "S'inscrire" : "Se connecter"}
+          </button>
+        </form>
+
+        <div className="text-center pt-2 border-t border-slate-800">
+          <button
+            onClick={() => {
+              setIsSignUp(!isSignUp);
+              setErrorMsg(null);
+            }}
+            className="text-xs text-slate-400 hover:text-cyan-400 transition-all font-semibold"
+          >
+            {isSignUp
+              ? "Vous avez déjà un compte ? Se connecter"
+              : "Vous n'avez pas de compte ? S'inscrire"}
           </button>
         </div>
-
-        {/* FOOTER LINK */}
-        <div className="text-center mt-6">
-          <a href="/" className="text-xs text-amber-400 hover:underline">
-            ← Retour à l'accueil
-          </a>
-        </div>
-
       </div>
-    </main>
+    </div>
   );
-          }
+}
